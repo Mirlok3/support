@@ -58,14 +58,9 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.-item" href="{{ route('logout') }}"
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="">
                                         @csrf
+                                        <button type="submit" class="btn">Logout</button>
                                     </form>
                                 </div>
                             </li>
@@ -78,14 +73,17 @@
         <nav class="navbar navbar-expand-md fw-bold">
             <div class="container">
                 <ul class="navbar-nav m-auto">
-                    <!-- Authentication Links -->
-                    <li class="nav-item rounded-pill bg-info px-3 mx-1">
-                        <a class="nav-link text-black" href="{{ route('login') }}">Oddeleni</a>
-                    </li>
-
-                    <li class="nav-item rounded-pill bg-info px-3 mx-1">
-                        <a class="nav-link text-black" href="{{ route('register') }}">Oddeleni</a>
-                    </li>
+                    @auth
+                        @foreach($departments as $department)
+                            <!-- Authentication Links -->
+                            <li class="nav-item rounded-pill bg-info px-3 mx-1">
+                                <a class="nav-link text-black" href="{{ route('login') }}">{{ $department->name }}</a>
+                            </li>
+                        @endforeach
+                        <li class="nav-item rounded-pill bg-info px-3 mx-1">
+                            <a class="nav-link text-black" href="{{ route('departments.create') }}">+</a>
+                        </li>
+                    @endauth
                 </ul>
             </div>
         </nav>

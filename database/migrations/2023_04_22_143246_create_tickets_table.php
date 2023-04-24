@@ -20,7 +20,7 @@ class CreateTicketsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('taker_id')->references('id')->on('users');
             $table->foreignId('department_id')->constrained();
-            $table->string('title');
+            $table->string('title'); // Todo: Id zarizeni, tel cislo
             $table->text('description')->nullable();
             $table->string('post_file')->nullable();
             $table->timestamps();
