@@ -17,6 +17,6 @@ class Ticket extends Model
         'device_number',
         'phone_number',
         'description',
-        'post_file',
+        'file',
     ];
 }

@@ -13,4 +13,9 @@ class Department extends Model
         'name',
         'role',
     ];
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
 }

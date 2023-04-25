@@ -24,7 +24,7 @@ class CreateTicketsTable extends Migration
             $table->string('device_number');
             $table->string('phone_number');
             $table->text('description')->nullable();
-            $table->string('post_file')->nullable();
+            $table->string('file')->nullable();
             $table->timestamps();
         });
     }

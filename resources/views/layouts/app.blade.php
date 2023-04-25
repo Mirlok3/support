@@ -48,7 +48,7 @@
 
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                                 </li>
                             @endif
                         @else
@@ -57,8 +57,14 @@
                                     {{ Auth::user()->name }}
                                 </a>
 
+
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="">
+                                    <div class="ps-1">
+                                        <a class="nav-link text-black" href="{{ route('profile.show', auth()->id()) }}">
+                                            Vase tickety
+                                        </a>
+                                    </div>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST">
                                         @csrf
                                         <button type="submit" class="btn">Logout</button>
                                     </form>
@@ -75,12 +81,12 @@
                 <ul class="navbar-nav m-auto">
                     @auth
                         @foreach($departments as $department)
-                            <!-- Authentication Links -->
                             <li class="d-flex nav-item rounded-pill bg-info px-2 mx-1">
-                                <a class="nav-link text-black" href="{{ route('login') }}">
-                                    {{ $department->name }} {{ $userRole }}
-                                    <a class="nav-link text-black" href="{{ route('departments.edit', $department->id) }}">{{ $department->id }}</a>
+                                <a class="nav-link text-black" href="{{ route('departments.show', $department->id) }}">
+                                    {{ $department->name }}
                                 </a>
+                                {{--{{ (strpos(Route::currentRouteName(), 'admin.cities') == 0) ? 'active' : '' }} Active link Todo:--}}
+                                <a class="nav-link text-black " href="{{ route('departments.edit', $department->id) }}">Edit</a>
                             </li>
                         @endforeach
                         @if($userRole == "IT")

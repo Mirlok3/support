@@ -3,11 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
+    public function show($id)
+    {
+        $tickets = Ticket::where('department_id', $id)->get();
+        return view('show', ['tickets' => $tickets]);
+    }
+
     public function create()
     {
         return view('department.create');
@@ -24,7 +31,7 @@ class DepartmentController extends Controller
         $department->role = User::where('id', auth()->id())->value('role');
         $department->save();
 
-        return back();
+        return redirect('/');
     }
 
     public function edit(Department $department)
