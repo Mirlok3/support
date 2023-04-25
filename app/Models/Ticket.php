@@ -14,6 +14,8 @@ class Ticket extends Model
         'department_id',
         'taker_id',
         'title',
+        'device_number',
+        'phone_number',
         'description',
         'post_file',
     ];

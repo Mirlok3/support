@@ -3,30 +3,52 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class DepartmentController extends Controller
 {
-    public function index()
-    {
-        $departments = DB::table('departments')->get();
-        return view('home', ['departments' => $departments]);
-    }
-
     public function create()
     {
-        return view('create');
+        return view('department.create');
     }
 
     public function store(Request $request)
     {
-        $department = new Department;
-        $department->name = $request->validate([
-            'name' => 'required|unique:departments|max:255',
+        $request->validate([
+            'name' => ['required','unique:departments','max:255']
         ]);
+        $department = new Department();
+        $department->name = $request['name'];
+        $department->user_id = auth()->id();
+        $department->role = User::where('id', auth()->id())->value('role');
         $department->save();
 
-        return view('home');
+        return back();
+    }
+
+    public function edit(Department $department)
+    {
+        return view('department.edit', ['department' => $department]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => ['required','unique:departments','max:255']
+        ]);
+        $department = Department::findOrFail($id);
+
+        $department->name = $request['name'];
+
+        $department->update();
+
+        return redirect('/');
+    }
+
+    public function destroy(Request $request,$id)
+    {
+        Department::destroy($id);
+        return redirect('/');
     }
 }

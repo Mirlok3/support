@@ -19,7 +19,6 @@
                                 @endforeach
                             </ul>
                         </div>
-
                     @endif
 
                     <button type="submit" class="btn btn-primary btn-block">Vytvořit</button>
