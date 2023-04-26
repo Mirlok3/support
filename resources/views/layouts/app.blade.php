@@ -86,7 +86,9 @@
                                     {{ $department->name }}
                                 </a>
                                 {{--{{ (strpos(Route::currentRouteName(), 'admin.cities') == 0) ? 'active' : '' }} Active link Todo:--}}
-                                <a class="nav-link text-black " href="{{ route('departments.edit', $department->id) }}">Edit</a>
+                                @if ($department->id == auth()->id() || $userRole == 'IT')
+                                    <a class="nav-link text-black " href="{{ route('departments.edit', $department->id) }}">Edit</a>
+                                @endif
                             </li>
                         @endforeach
                         @if($userRole == "IT")

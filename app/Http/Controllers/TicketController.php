@@ -5,9 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Department;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class TicketController extends Controller
 {
+    public function show()
+    {
+        dd('cc');
+    }
+
     public function create()
     {
         return view('home');
@@ -15,7 +21,6 @@ class TicketController extends Controller
 
     public function store(Request $request)
     {
-        //dd($request);
         $request->validate([
             'title' => ['required','max:255'],
             'description' => ['max:1024'],
@@ -29,7 +34,7 @@ class TicketController extends Controller
             $imageName = $request['file']->hashName();
             $request['file']->move(public_path('ticket_files'), $imageName);
             $file = '/ticket_files/' . $imageName;
-        }
+        } else $file = Null;
 
         $ticket->user_id = auth()->id();
         $ticket->department_id = $request['department'];
@@ -42,5 +47,66 @@ class TicketController extends Controller
         $ticket->save();
 
         return redirect('/');
+    }
+
+    public function edit(Ticket $ticket)
+    {
+        if (! Gate::allows('update-ticket', $ticket)) {
+            abort(403);
+        }
+
+        return view('ticket.edit', ['ticket' => $ticket]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'title' => ['required', 'max:255'],
+            'description' => ['max:1024'],
+            'device_number' => ['required', 'max:255'],
+            'phone_number' => ['required'], // TODO: validate if phone number
+            'file' => 'max:10240',
+        ]);
+
+        $ticket = Ticket::findOrFail($id);
+        if (! Gate::allows('update-ticket', $ticket)) {
+            abort(403);
+        }
+
+        if ($request->hasFile('file')) { //TODO: delete old file
+            $imageName = $request['file']->hashName();
+            $request['file']->move(public_path('ticket_files'), $imageName);
+            $file = '/ticket_files/' . $imageName;
+        } else $file = Null;
+
+        $ticket->department_id = $request['department'];
+        $ticket->title = $request['title'];
+        $ticket->description = $request['description'];
+        $ticket->device_number = $request['device_number'];
+        $ticket->phone_number = $request['phone_number'];
+        $ticket->file = $file;
+
+        $ticket->update();
+
+        return redirect('/'); // TODO: redirect to show
+    }
+
+    public function destroy($id)
+    {
+        Ticket::destroy($id);
+        return redirect('/');
+    }
+
+    public function takeTicket($ticketId, $userId)
+    {
+        $ticket = Ticket::findOrFail($ticketId);
+        $department = Department::where('id', $ticket->department_id)->value('role');
+        if (! Gate::allows('take-ticket', $department)) {
+            abort(403);
+        }
+
+        $ticket->taker_id = $userId;
+        $ticket->update();
+        return back();
     }
 }

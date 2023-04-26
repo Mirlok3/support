@@ -19,4 +19,14 @@ class Ticket extends Model
         'description',
         'file',
     ];
+
+    public function taker()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
 }

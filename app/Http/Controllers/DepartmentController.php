@@ -6,17 +6,22 @@ use App\Models\Department;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class DepartmentController extends Controller
 {
     public function show($id)
     {
-        $tickets = Ticket::where('department_id', $id)->get();
+        $tickets = Ticket::with('taker', 'department')->where('department_id', $id)->get();
+        // tODO: Get department data only once
         return view('show', ['tickets' => $tickets]);
     }
 
     public function create()
     {
+        if (! Gate::allows('admin')) {
+            abort(403);
+        }
         return view('department.create');
     }
 
@@ -36,6 +41,9 @@ class DepartmentController extends Controller
 
     public function edit(Department $department)
     {
+        if (! Gate::allows('update-department', $department)) {
+            abort(403);
+        }
         return view('department.edit', ['department' => $department]);
     }
 
@@ -47,7 +55,6 @@ class DepartmentController extends Controller
         $department = Department::findOrFail($id);
 
         $department->name = $request['name'];
-
         $department->update();
 
         return redirect('/');
@@ -55,6 +62,10 @@ class DepartmentController extends Controller
 
     public function destroy(Request $request,$id)
     {
+        $department = Department::findOrFail($id);
+        if (! Gate::allows('update-department', $department)) {
+            abort(403);
+        }
         Department::destroy($id);
         return redirect('/');
     }
