@@ -10,7 +10,9 @@
                         <div class="media">
                             <div>
                                 <div class="d-flex justify-content-between">
-                                    <strong class="h3">{{ $ticket->title }}</strong>
+                                    <a class="nav-link" href="{{ route('ticket.show', $ticket->id) }}">
+                                        <strong class="h3">{{ $ticket->title }}</strong>
+                                    </a>
                                     <div>
                                         <span> #{{ $ticket->id }}</span>
                                         @if ($ticket->user_id == auth()->id() || $userRole == 'IT')
@@ -18,20 +20,25 @@
                                         @endif
                                     </div>
                                 </div>
+                                <div class="pb-2">
+                                    {{ $ticket->user->name }}
+                                    <span class="text-muted">{{ $ticket->created_at->diffForHumans() }}</span>
+                                </div>
                                 <p class="text-truncate text-muted">
                                     {{ $ticket->description }}
-                                    {{ $userRole }}
                                 </p>
-                                <p>
+                                <div>
                                     @if (isset($ticket->taker_id))
                                         Převzáno: {{ $ticket->taker->name }}
                                     @elseif ($userRole === $ticket->department->role || $userRole == 'IT')
                                         <a href="{{ route('ticket.takeTicket', [$ticket->id, auth()->id()]) }}">Vzít ticket</a>
                                     @endif
-
-                                    <span class="text-muted">{{ $ticket->created_at->diffForHumans() }}</span>
+                                        {{--<select name="" id=""> TODO: names in department
+                                            <option value="">Tomas</option>
+                                            <option value="">Jan</option>
+                                        </select>--}}
                                     <a href="#">2 komentáře</a> {{--TODO: komentare--}}
-                                </p>
+                                </div>
 
                             </div>
                         </div>

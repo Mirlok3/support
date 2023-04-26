@@ -9,9 +9,10 @@ use Illuminate\Support\Facades\Gate;
 
 class TicketController extends Controller
 {
-    public function show()
+    public function show($id)
     {
-        dd('cc');
+        $ticket = Ticket::with('taker', 'department', 'user')->where('id', $id)->firstOrFail();
+        return view('ticket.show', ['ticket' => $ticket]);
     }
 
     public function create()
@@ -46,7 +47,7 @@ class TicketController extends Controller
 
         $ticket->save();
 
-        return redirect('/');
+        return redirect()->route('ticket.show', ['ticket' => $ticket]);
     }
 
     public function edit(Ticket $ticket)
@@ -77,18 +78,18 @@ class TicketController extends Controller
             $imageName = $request['file']->hashName();
             $request['file']->move(public_path('ticket_files'), $imageName);
             $file = '/ticket_files/' . $imageName;
-        } else $file = Null;
+            $ticket->file = $file;
+        }
 
         $ticket->department_id = $request['department'];
         $ticket->title = $request['title'];
         $ticket->description = $request['description'];
         $ticket->device_number = $request['device_number'];
         $ticket->phone_number = $request['phone_number'];
-        $ticket->file = $file;
 
         $ticket->update();
 
-        return redirect('/'); // TODO: redirect to show
+        return view('ticket.show', ['ticket' => $ticket]);
     }
 
     public function destroy($id)
