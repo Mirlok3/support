@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Department;
 use App\Models\Ticket;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
@@ -12,7 +13,8 @@ class TicketController extends Controller
     public function show($id)
     {
         $ticket = Ticket::with('taker', 'department', 'user')->where('id', $id)->firstOrFail();
-        return view('ticket.show', ['ticket' => $ticket]);
+        $departmentUsers = User::where('role', $ticket->department->role)->get();
+        return view('ticket.show', ['ticket' => $ticket, 'departmentUsers' => $departmentUsers]);
     }
 
     public function create()
@@ -98,7 +100,7 @@ class TicketController extends Controller
         return redirect('/');
     }
 
-    public function takeTicket($ticketId, $userId)
+    public function takeTicket($ticketId, Request $request)
     {
         $ticket = Ticket::findOrFail($ticketId);
         $department = Department::where('id', $ticket->department_id)->value('role');
@@ -106,7 +108,10 @@ class TicketController extends Controller
             abort(403);
         }
 
-        $ticket->taker_id = $userId;
+        if ($request->user === 'null') {
+            $ticket->taker_id = NULL;
+        } else $ticket->taker_id = $request->user;
+
         $ticket->update();
         return back();
     }

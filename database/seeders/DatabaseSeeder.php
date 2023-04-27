@@ -40,5 +40,12 @@ class DatabaseSeeder extends Seeder
             'name' => 'technik',
             'role'=> 'technik',
         ]);
+
+        DB::table('users')->insert([
+            'name' => 'technik2',
+            'email' => 'admin@admin.comss',
+            'role'=> 'technik',
+            'password' => bcrypt('password'),
+        ]);
     }
 }

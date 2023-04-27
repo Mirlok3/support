@@ -27,19 +27,20 @@
                                 <p class="text-truncate text-muted">
                                     {{ $ticket->description }}
                                 </p>
-                                <div>
+                                <div class="pb-1">
                                     @if (isset($ticket->taker_id))
                                         Převzáno: {{ $ticket->taker->name }}
-                                    @elseif ($userRole === $ticket->department->role || $userRole == 'IT')
-                                        <a href="{{ route('ticket.takeTicket', [$ticket->id, auth()->id()]) }}">Vzít ticket</a>
                                     @endif
-                                        {{--<select name="" id=""> TODO: names in department
-                                            <option value="">Tomas</option>
-                                            <option value="">Jan</option>
-                                        </select>--}}
                                     <a href="#">2 komentáře</a> {{--TODO: komentare--}}
                                 </div>
 
+                                @if ($ticket->taker_id == auth()->id())
+                                    <form method="POST" action="/ticket/take/{{ $ticket->id }}">
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary btn-sm rounded-start">Vzdát se ticketu</button>
+                                        <input type="hidden" name="user" value="null">
+                                    </form>
+                                @endif
                             </div>
                         </div>
                     </li>

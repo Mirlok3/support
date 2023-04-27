@@ -61,7 +61,10 @@
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <div class="ps-1">
                                         <a class="nav-link text-black" href="{{ route('profile.show', auth()->id()) }}">
-                                            Vase tickety
+                                            Vaše tickety
+                                        </a>
+                                        <a class="nav-link text-black" href="{{ route('profile.showTaken', auth()->id()) }}">
+                                            Převzané tickety
                                         </a>
                                     </div>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST">

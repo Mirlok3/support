@@ -12,9 +12,11 @@ class DepartmentController extends Controller
 {
     public function show($id)
     {
-        $tickets = Ticket::with('taker', 'department', 'user')->where('department_id', $id)->get();
-        // tODO: Get department data only once
-        return view('show', ['tickets' => $tickets]);
+        $tickets = Ticket::with('taker', 'user')->where('department_id', $id)->get();
+        $department = Department::findOrFail($id);
+        $departmentUsers = User::where('role', $department->role)->get();
+
+        return view('department.show', ['tickets' => $tickets, 'department' => $department, 'departmentUsers' => $departmentUsers]);
     }
 
     public function create()
