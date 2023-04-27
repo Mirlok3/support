@@ -29,8 +29,8 @@
 
                     <div class="d-flex justify-content-between m-2">
                         <div class="form-group m-2 col-md-7">
-                            <label for="file">Soubory</label>
-                            <input type="file" class="form-control" name="file" placeholder="1234 Main St">
+                            <label for="file">Soubor</label>
+                            <input type="file" class="form-control" accept="image/*" name="file">
                         </div>
 
                         <div class="form-group m-2 col-md-3">

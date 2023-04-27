@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="media text-break bg-white border border-secondary p-3">
+                <div class="media text-break bg-white border border-secondary p-3 rounded-2">
                     <span class="d-flex justify-content-between text-muted">
                         {{ $ticket->department->name }}
                         <div>
@@ -69,6 +69,53 @@
                             </form>
                         @endif
                     </div>
+                </div>
+                <div class="media text-break bg-white border border-secondary p-3 mt-3 rounded-2">
+                    @if($ticket->taker_id == auth()->id() || $ticket->user_id == auth()->id())
+                        <h4 class="ps-2">Vytvořit komentář</h4>
+                        <form action="/comment/store/{{ $ticket->id }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="form-group m-2">
+                                <textarea name="content" rows="4" class="form-control"></textarea>
+                            </div>
+                            <div class="form-group m-2 col-md-7">
+                                <label for="file">Soubor</label>
+                                <input type="file" accept="image/*" class="form-control" name="file">
+                            </div>
+                            <button type="submit" class="ms-2 mb-2 btn btn-primary btn-block">Vytvořit</button>
+                            @if ($errors->any())
+                                <div class="alert alert-danger ms-2">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+                        </form>
+                        <hr>
+                    @endif
+                    @foreach($comments as $comment)
+                        <div class="border border-secondary p-2 rounded-2 mb-2">
+                            <div class="d-flex justify-content-between">
+                                <h5>{{ $comment->user->name }} <span class="h6 text-muted">{{ $comment->created_at->diffForHumans() }}</span></h5>
+                                <div class="d-flex">
+                                    <a href="{{ route('comment.edit', [$comment]) }}" class="btn btn-sm btn-info text-white mx-1">
+                                        Změnit
+                                    </a>
+
+                                    <form id="deleteForm" action="{{ route('comment.destroy', [$comment]) }}" method="POST">
+                                        @method("DELETE")
+                                        @csrf
+
+                                        <button type="submit" class="btn btn-sm btn-danger">Smazat</button>
+                                    </form>
+                                </div>
+                            </div>
+                                <p>{{ $comment->content }}</p>
+                            <img src="{{ $comment->file }}" class="img-fluid">
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>

@@ -13,5 +13,11 @@ class Comments extends Model
         'user_id',
         'ticket_id',
         'content',
+        'file',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

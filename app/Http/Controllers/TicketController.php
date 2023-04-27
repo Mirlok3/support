@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comments;
 use App\Models\Department;
 use App\Models\Ticket;
 use App\Models\User;
@@ -14,7 +15,8 @@ class TicketController extends Controller
     {
         $ticket = Ticket::with('taker', 'department', 'user')->where('id', $id)->firstOrFail();
         $departmentUsers = User::where('role', $ticket->department->role)->get();
-        return view('ticket.show', ['ticket' => $ticket, 'departmentUsers' => $departmentUsers]);
+        $comments = Comments::with('user')->where('ticket_id', $ticket->id)->orderBy('created_at', 'desc')->get();
+        return view('ticket.show', ['ticket' => $ticket, 'departmentUsers' => $departmentUsers, 'comments' => $comments]);
     }
 
     public function create()
