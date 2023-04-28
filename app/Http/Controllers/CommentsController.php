@@ -45,6 +45,10 @@ class CommentsController extends Controller
 
         $comment = Comments::findOrFail($id);
         if ($request->hasFile('file')) {
+            if (isset($comment->file)) {
+                unlink(public_path() . $comment->file);
+            }
+
             $imageName = $request['file']->hashName();
             $request['file']->move(public_path('comment_files'), $imageName);
             $file = '/comment_files/' . $imageName;

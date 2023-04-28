@@ -16,7 +16,7 @@
                                     <div>
                                         <span> #{{ $ticket->id }}</span>
                                         @if ($ticket->user_id == auth()->id() || $userRole == 'IT')
-                                            <a href="{{ route('ticket.edit', $ticket->id) }}">Edit</a>
+                                            <a href="{{ route('ticket.edit', $ticket->id) }}" class="btn btn-sm btn-info text-white mx-1">Edit</a>
                                         @endif
                                     </div>
                                 </div>
@@ -33,7 +33,7 @@
                                     @if (isset($ticket->taker_id))
                                         Převzáno: {{ $ticket->taker->name }}
                                     @endif
-                                    <a href="#">2 komentáře</a> {{--TODO: komentare--}}
+                                    <a href="{{ route('ticket.show', $ticket->id) }}">{{ $ticket->comments_count }} komentáře</a>
                                 </div>
 
                                 <div>

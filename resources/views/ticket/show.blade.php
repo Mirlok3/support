@@ -10,7 +10,7 @@
                         <div>
                             <span> #{{ $ticket->id }}</span>
                             @if ($ticket->user_id == auth()->id() || $userRole == 'IT')
-                                <a href="{{ route('ticket.edit', $ticket->id) }}">Edit</a>
+                                <a href="{{ route('ticket.edit', $ticket->id) }}" class="btn btn-sm btn-info text-white mx-1">Edit</a>
                             @endif
                         </div>
                     </span>
@@ -99,20 +99,22 @@
                         <div class="border border-secondary p-2 rounded-2 mb-2">
                             <div class="d-flex justify-content-between">
                                 <h5>{{ $comment->user->name }} <span class="h6 text-muted">{{ $comment->created_at->diffForHumans() }}</span></h5>
-                                <div class="d-flex">
-                                    <a href="{{ route('comment.edit', [$comment]) }}" class="btn btn-sm btn-info text-white mx-1">
-                                        Změnit
-                                    </a>
+                                @if ($comment->user_id == auth()->id() || $userRole == 'IT')
+                                    <div class="d-flex">
+                                        <a href="{{ route('comment.edit', [$comment]) }}" class="btn btn-sm btn-info text-white mx-1">
+                                            Změnit
+                                        </a>
 
-                                    <form id="deleteForm" action="{{ route('comment.destroy', [$comment]) }}" method="POST">
-                                        @method("DELETE")
-                                        @csrf
+                                        <form id="deleteForm" action="{{ route('comment.destroy', [$comment]) }}" method="POST">
+                                            @method("DELETE")
+                                            @csrf
 
-                                        <button type="submit" class="btn btn-sm btn-danger">Smazat</button>
-                                    </form>
-                                </div>
+                                            <button type="submit" class="btn btn-sm btn-danger">Smazat</button>
+                                        </form>
+                                    </div>
+                                @endif
                             </div>
-                                <p>{{ $comment->content }}</p>
+                            <p>{{ $comment->content }}</p>
                             <img src="{{ $comment->file }}" class="img-fluid">
                         </div>
                     @endforeach

@@ -29,7 +29,7 @@ class TicketController extends Controller
         $request->validate([
             'title' => ['required','max:255'],
             'description' => ['max:1024'],
-            'device_number' => ['required','max:255'],
+            'device_number' => ['max:255'],
             'phone_number' => ['required'], // TODO: validate if phone number
             'file' => 'max:10240',
         ]);
@@ -78,7 +78,11 @@ class TicketController extends Controller
             abort(403);
         }
 
-        if ($request->hasFile('file')) { //TODO: delete old file
+        if ($request->hasFile('file')) {
+            if (isset($ticket->file)) {
+                unlink(public_path() . $ticket->file);
+            }
+
             $imageName = $request['file']->hashName();
             $request['file']->move(public_path('ticket_files'), $imageName);
             $file = '/ticket_files/' . $imageName;
@@ -93,7 +97,7 @@ class TicketController extends Controller
 
         $ticket->update();
 
-        return view('ticket.show', ['ticket' => $ticket]);
+        return redirect()->route('ticket.show', $ticket->id);
     }
 
     public function destroy($id)

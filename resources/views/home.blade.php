@@ -4,7 +4,8 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <form method="POST" action="{{ route('ticket.store') }}" class="bg-white p-2" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('ticket.store') }}" class="bg-white border border-secondary p-3 rounded-2" enctype="multipart/form-data">
+                    <h4 class="p-2">Vytvořte ticket</h4>
                     @csrf
                     <div class="form-group m-2">
                         <label for="title">Problém</label>

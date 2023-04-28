@@ -11,13 +11,13 @@ class UserController extends Controller
 {
     public function show($id)
     {
-        $tickets = Ticket::with('taker', 'department', 'user')->where('user_id', $id)->get();
+        $tickets = Ticket::with('taker', 'department', 'user')->withCount('comments')->where('user_id', $id)->get();
         return view('profile.show', ['tickets' => $tickets]);
     }
 
     public function showTaken($id)
     {
-        $tickets = Ticket::with('taker', 'department', 'user')->where('taker_id', $id)->get();
+        $tickets = Ticket::with('taker', 'department', 'user')->withCount('comments')->where('taker_id', $id)->get();
         return view('profile.show_taken', ['tickets' => $tickets]);
     }
 }

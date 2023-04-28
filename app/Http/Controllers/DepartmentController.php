@@ -12,7 +12,7 @@ class DepartmentController extends Controller
 {
     public function show($id)
     {
-        $tickets = Ticket::with('taker', 'user')->where('department_id', $id)->get();
+        $tickets = Ticket::with('taker', 'user')->where('department_id', $id)->withCount('comments')->get();
         $department = Department::findOrFail($id);
         $departmentUsers = User::where('role', $department->role)->get();
 

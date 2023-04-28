@@ -31,8 +31,7 @@
                                     @if (isset($ticket->taker_id))
                                         Převzáno: {{ $ticket->taker->name }}
                                     @endif
-                                    <a href="#">2 komentáře</a> {{--TODO: komentare--}}
-
+                                    <a href="{{ route('ticket.show', $ticket->id) }}">{{ $ticket->comments_count }} komentáře</a>
                                 </div>
                             </div>
                         </div>
